@@ -1,21 +1,25 @@
 #!/bin/bash
 set -e
 
+# just do it on debian cmon 
 sudo apt update -y
 sudo apt install -y build-essential gcc g++ make libncurses-dev bison flex libssl-dev libelf-dev bc autoconf automake libtool git qemu-system-x86 cpio gzip
 
-git clone https://github.com/torvalds/linux
-git clone https://github.com/bminor/glibc
-git clone https://github.com/mirror/busybox
+if [ -d "./linux"]; then
+    git clone https://github.com/torvalds/linux
+    git clone https://github.com/bminor/glibc
+    git clone https://github.com/mirror/busybox
+fi
 
 rm -rf initramfs/*
 mkdir -p initramfs/{proc,sys,tmp,lib,dev,etc/network,usr/share/udhcpc}
 
 echo "Compiling Linux Kernel..."
-cd ./linux
-    make defconfig
-    make -j$(nproc) bzImage
-cd ..
+
+    cd ./linux
+        make defconfig
+        make -j$(nproc) bzImage
+    cd ..
 
 cd glibc
     mkdir -p build
@@ -62,7 +66,7 @@ mount -t devtmpfs devtmpfs /dev &
 
 # Init messages
 clear
-echo "Welcome to AshDOS!"
+echo "Welcome to CadeDOS!"
 date
 free -h | grep Mem
 echo ""
